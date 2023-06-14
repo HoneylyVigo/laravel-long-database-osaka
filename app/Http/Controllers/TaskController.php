@@ -64,9 +64,8 @@ class TaskController extends Controller
 
         return redirect()->route('home');
     }
-        public function create()
+    public function create()
     {
-        // Fetch categories from the database
         $categories = DB::table('categories')->get();
 
         return view('add', ['categories' => $categories]);
@@ -75,16 +74,13 @@ class TaskController extends Controller
     public function store(Request $request)
     {
 
-        // Get the user ID
         $user_id = Session::get('user_id');
 
-        // Get the task details from the form
         $title = $request->input('title');
         $description = $request->input('description');
         $status = $request->input('status');
         $categories = $request->input('categories');
 
-        // Insert the task details into the tasks table
         $taskID = DB::table('tasks')->insertGetId([
             'title' => $title,
             'description' => $description,
@@ -92,7 +88,6 @@ class TaskController extends Controller
             'user_id' => $user_id
         ]);
 
-        // Insert the task-category relationship into the task_category table
         foreach ($categories as $categoryID) {
             DB::table('task_category')->insert([
                 'task_id' => $taskID,
@@ -102,6 +97,4 @@ class TaskController extends Controller
 
         return redirect()->route('index');
     }
-
-
 }
